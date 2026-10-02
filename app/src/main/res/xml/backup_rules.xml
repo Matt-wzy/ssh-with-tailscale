@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Cloud backup excludes (API < 31). The SSH private keys and the Tailscale
+  node identity in filesDir are credentials: losing the device must not leak
+  them into a cloud backup.
+-->
+<full-backup-content>
+    <exclude domain="file" path="keys" />
+    <exclude domain="file" path="tailscale" />
+</full-backup-content>

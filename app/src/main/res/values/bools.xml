@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light status bar icons on light backgrounds; overridden in values-night. -->
+    <bool name="window_light_status_bar">true</bool>
+</resources>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Home screen is one big terminal. The connection controls live in a panel that
+  collapses automatically once the SSH session is up, and comes back from the
+  toolbar's three-dot menu ("连接设置").
+
+  The panel has a fixed header and a fixed footer, with the fields in a scrolling
+  middle: with the keyboard up the panel gets short, and 连接 must stay reachable
+  without scrolling.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorSurface"
+        app:menu="@menu/main"
+        app:subtitle="@string/status_stopped"
+        app:title="@string/app_name" />
+
+    <!-- Connection panel: visible while setting up, gone once connected. -->
+    <LinearLayout
+        android:id="@+id/connectionPanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:background="?attr/colorSurface"
+        android:orientation="vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/panel_title"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCollapse"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:text="@string/panel_collapse"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Tailscale -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/label_authkey">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/authKey"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
+                            android:inputType="text|textNoSuggestions"
+                            android:maxLines="1"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTailscale"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:minWidth="0dp"
+                        android:text="@string/btn_start"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPeers"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="0dp"
+                        android:text="@string/btn_devices"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tailscaleStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="3"
+                    android:text="@string/status_stopped"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:typeface="monospace" />
+
+                <!-- SSH endpoint -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:hint="@string/label_host">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/host"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textUri"
+                            android:maxLines="1"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/label_port">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/port"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="2"
+                        android:hint="@string/label_user">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/user"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text|textNoSuggestions"
+                            android:maxLines="1"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:hint="@string/label_password"
+                        app:endIconMode="password_toggle">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Spinner
+                        android:id="@+id/keySpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="2" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnKeys"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="0dp"
+                        android:text="@string/btn_keys"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Sticky: always reachable, keyboard or not. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConnect"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="120dp"
+                android:text="@string/btn_connect" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Terminal: takes the rest of the screen, and everything once the panel hides. -->
+    <org.dpdns.mattsgateway.sshwithtailscale.terminal.TerminalView
+        android:id="@+id/terminal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <!-- Selection action bar (shown while a terminal selection is active). -->
+    <LinearLayout
+        android:id="@+id/selectionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sel_hint"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorOnSurfaceVariant" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSelCopy"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:text="@string/sel_copy" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSelCancel"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:text="@string/sel_cancel" />
+    </LinearLayout>
+
+    <!-- Modifier / shortcut row -->
+    <HorizontalScrollView
+        android:id="@+id/modifierRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp">
+
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnCtrl" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CTRL" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnAlt" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ALT" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnEsc" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ESC" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnTab" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TAB" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnLeft" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="←" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnDown" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="↓" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnUp" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="↑" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnRight" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="→" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnCtrlC" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="^C" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnCtrlD" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="^D" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnCtrlL" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="^L" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnCtrlZ" style="@style/ModKeyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="^Z" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>

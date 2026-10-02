@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  File-manager toolbar menu. Everything lives in the overflow: the common
+  actions already have dedicated buttons in the layout.
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_sort"
+        android:title="@string/fm_sort"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_refresh"
+        android:title="@string/fm_refresh"
+        app:showAsAction="never" />
+
+</menu>

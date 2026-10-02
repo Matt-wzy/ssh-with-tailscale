@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Foreground service keeping the embedded Tailscale node alive in the
+         background (specialUse, declared below). POST_NOTIFICATIONS makes that
+         service's status notification visible on Android 13+. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SSHWithTailscale">
+
+        <!-- configChanges: without these, showing the IME or rotating the
+             device can recreate the Activity, and its onDestroy() tears down
+             the SSH session (which looked like a random disconnect). -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Static info page; not exported because nothing outside the app needs
+             to open it directly. -->
+        <activity
+            android:name=".AboutActivity"
+            android:exported="false" />
+
+        <!-- SFTP file manager; not exported: reached from the toolbar menu. -->
+        <activity
+            android:name=".FileManagerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode" />
+
+        <!-- Keeps the process (and with it the in-process Tailscale node) alive
+             while the node runs, so backgrounding the app does not freeze SSH
+             sessions or take the reverse-exported ports down. "specialUse"
+             because no stock type fits an embedded userspace VPN node. -->
+        <service
+            android:name=".TailscaleService"
+            android:exported="false"
+            android:stopWithTask="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keeps the embedded Tailscale userspace node reachable so published tailnet ports and SSH sessions survive while the app is backgrounded." />
+        </service>
+
+        <!-- Lets the file manager hand a downloaded file to another app. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>

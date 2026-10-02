@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SSH over Tailscale</string>
+
+    <!-- Toolbar -->
+    <string name="action_reconnect">重连</string>
+    <string name="action_connection">连接设置</string>
+    <string name="action_devices">Tailnet 设备</string>
+    <string name="action_forwards">端口转发</string>
+    <string name="action_publish">反向导出</string>
+    <string name="action_clear">清屏</string>
+
+    <!-- Port forwarding -->
+    <string name="fwd_title">端口转发</string>
+    <string name="fwd_dir_local">本地 -L：手机监听，由 SSH 服务端去连目标</string>
+    <string name="fwd_dir_remote">远程 -R：服务端监听，由手机去连目标（经 Tailscale）</string>
+    <string name="fwd_bind_host">绑定地址</string>
+    <string name="fwd_bind_port">绑定端口</string>
+    <string name="fwd_target_host">目标主机</string>
+    <string name="fwd_target_port">目标端口</string>
+    <string name="fwd_help_local">改完规则后连上 SSH 才生效；已连接时会立刻重下发。\n绑定 0.0.0.0 会把这个端口暴露给同网络的其他设备，公共 Wi-Fi 上请勿使用。</string>
+    <string name="fwd_help_remote">远程转发绑定 0.0.0.0 需要服务端 sshd 配置 GatewayPorts yes，否则只会绑在服务器回环上。\n目标主机由手机去连，可以填 tailnet 地址（经 Tailscale）。</string>
+    <string name="fwd_add">添加</string>
+    <string name="fwd_empty">还没有规则。添加后每次连接会自动下发。</string>
+    <string name="fwd_delete">删除</string>
+
+    <!-- Reverse export (publish on the tailnet) -->
+    <string name="pub_title">反向导出</string>
+    <string name="pub_dir_relay">中继：在 tailnet 上监听，连接被转给手机局域网里的设备</string>
+    <string name="pub_dir_proxy">代理：在 tailnet 上起一个 HTTP 代理，tailnet 设备可经手机上网</string>
+    <string name="pub_listen_port">tailnet 监听端口</string>
+    <string name="pub_target_host">目标主机（手机局域网 IP）</string>
+    <string name="pub_target_port">目标端口</string>
+    <string name="pub_help_relay">手机在 tailnet 上监听该端口，所有连进来的连接会被中继到「目标主机:端口」。\n目标主机从手机自身网络发出，所以能填手机 Wi-Fi 网段里的设备（如 192.168.1.50:80）。</string>
+    <string name="pub_help_proxy">手机在 tailnet 上监听该端口，作为 HTTP 代理。\n其他 tailnet 设备把代理设成 100.x.x.x:端口 后，流量经手机出去。无需 SSH、无需 VpnService、无需管理员批准。</string>
+    <string name="pub_add">添加</string>
+    <string name="pub_empty">还没有导出规则。添加后 Tailscale 连上会自动生效，且常驻。</string>
+    <string name="pub_stop">停止</string>
+    <string name="pub_copied">已复制 tailnet 地址</string>
+
+    <!-- Connection panel -->
+    <string name="panel_title">连接设置</string>
+    <string name="panel_collapse">收起</string>
+    <string name="label_tailscale">Tailscale（authkey 留空即复用已登录状态）</string>
+    <string name="label_authkey">authkey</string>
+    <string name="btn_start">启动</string>
+    <string name="btn_stop">停止</string>
+    <string name="btn_devices">设备</string>
+
+    <string name="label_host">主机</string>
+    <string name="label_port">端口</string>
+    <string name="label_user">用户名</string>
+    <string name="label_password">密码</string>
+    <string name="btn_keys">密钥</string>
+    <string name="btn_connect">连接</string>
+    <string name="btn_reconnect">重连</string>
+
+    <!-- Status -->
+    <string name="status_stopped">Tailscale 未启动</string>
+    <string name="status_tailscale_on">Tailscale 已连接 · SSH 未连接</string>
+    <string name="status_starting">Tailscale 启动中…</string>
+    <string name="status_need_auth">Tailscale 需要重新认证（点击工具栏打开）</string>
+    <string name="status_auth_required">需要重新认证（authkey 已过期或被撤销）\n点开下面的链接完成登录：\n%1$s</string>
+
+    <!-- Foreground service notification -->
+    <string name="notif_channel_name">Tailscale 节点</string>
+    <string name="notif_text">Tailscale 节点运行中，SSH 与反向导出保持可用</string>
+
+    <!-- Key manager: TOFU host fingerprints -->
+    <string name="keys_clear_fingerprints">清除主机指纹</string>
+    <string name="keys_clear_fingerprints_confirm">删除所有已记录的 SSH 主机指纹？下次连接会重新记录（服务器重装后需要这一步）。</string>
+    <string name="keys_fingerprints_cleared">已清除主机指纹，下次连接将重新记录</string>
+
+    <!-- File manager -->
+    <string name="action_files">文件管理</string>
+    <string name="fm_home">主目录</string>
+    <string name="fm_up">上级</string>
+    <string name="fm_dl_dir">下载目录</string>
+    <string name="fm_upload">上传</string>
+    <string name="fm_download">下载</string>
+    <string name="fm_mkdir">新建目录</string>
+    <string name="fm_delete">删除</string>
+    <string name="fm_select_all">全选</string>
+    <string name="fm_cancel">取消</string>
+    <string name="fm_sort">排序</string>
+    <string name="fm_refresh">刷新</string>
+    <string name="fm_sort_title">排序方式</string>
+    <string name="fm_back_hint">再按一次返回退出文件管理</string>
+
+    <!-- Terminal selection (long-press copy) -->
+    <string name="sel_copy">复制</string>
+    <string name="sel_cancel">取消</string>
+    <string name="sel_copied">已复制到剪贴板</string>
+    <string name="sel_hint">长按选择，拖动调整范围，松手后点「复制」</string>
+
+    <!-- About -->
+    <string name="action_about">关于</string>
+    <string name="about_title">关于</string>
+    <string name="about_version">版本 %1$s（%2$d）</string>
+    <string name="about_intro">把 Tailscale 节点直接嵌进 App，无需 VpnService、无需 root。\n可以在 tailnet 上 SSH 到任意设备，也能反过来把手机做成 tailnet 上的服务端。</string>
+    <string name="about_features_heading">功能</string>
+    <string name="about_features">
+        · SSH over tailnet —— 经 SOCKS5 走 WireGuard 隧道连到 100.x.x.x。\n
+        · 端口转发 —— 本地 -L / 远程 -R。\n
+        · 反向导出 —— 手机在 tailnet 上监听，做中继或 HTTP 代理，手机即服务端。\n
+        · 文件管理 —— SFTP 浏览/上传/下载，多文件并行，碎文件服务器端打包。\n
+        · Tailnet 设备列表 —— 查看在线节点。
+    </string>
+    <string name="about_tech_heading">技术实现</string>
+    <string name="about_tech">
+        Tailscale 以 userspace（netstack）模式运行：不创建 TUN 设备，不占用系统唯一的 VpnService 槽位，因此可以和企业 VPN 等其它 VPN 应用共存。\n\n
+        Go 侧用 gomobile 打成 AAR，编译进 App。
+    </string>
+    <string name="about_opensource_heading">开源组件</string>
+    <string name="about_opensource">
+        · tailscale.com（BSD-3-Clause）\n
+        · things-go/go-socks5\n
+        · com.github.mwiede:jsch（SSH，com.jcraft:jsch 的维护分支）\n
+        · Material Components for Android
+    </string>
+
+    <!--
+      Author card. Kept in-app (but not in the README) so that someone who
+      installed the APK has a way to reach a human. Change the two values below
+      if you fork this; the SPDX headers in the source files carry the same
+      name and should be updated alongside.
+    -->
+    <string name="about_author_heading">作者</string>
+    <string name="about_author_name" translatable="false">Matt</string>
+    <string name="about_author_contact" translatable="false">matt@mattsgateway.dpdns.org</string>
+    <string name="about_author_note">本项目以 GPL-3.0-or-later 开源。发现问题或想提功能建议，欢迎邮件联系。</string>
+
+    <string name="about_license_heading">开源协议</string>
+    <string name="about_license">GPL-3.0-or-later。任何基于本项目代码的衍生作品，同样必须以 GPL-3.0（或更高版本）开源并公开其完整源代码。完整条款见仓库根目录的 LICENSE。</string>
+</resources>

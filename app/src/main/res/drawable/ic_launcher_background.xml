@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Adaptive icon background: Tailscale-ish blue with a faint mesh of nodes and
+  links (the tailnet this app tunnels SSH through).
+
+  The mesh hugs the perimeter, deliberately outside the glyph's bounding box, so
+  the white prompt sits on clean blue. It is also outside the central 66dp safe
+  zone, which means a circular or squircle launcher mask only trims decoration
+  and never touches the terminal mark.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M0,0h108v108h-108z" />
+
+    <!-- Mesh links along the perimeter. -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M10,14 L44,8 L86,14"
+        android:strokeWidth="1.6"
+        android:strokeAlpha="0.4"
+        android:strokeColor="#93C5FD"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M10,14 L8,50"
+        android:strokeWidth="1.6"
+        android:strokeAlpha="0.4"
+        android:strokeColor="#93C5FD"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M86,14 L100,52"
+        android:strokeWidth="1.6"
+        android:strokeAlpha="0.4"
+        android:strokeColor="#93C5FD"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M8,50 L12,96"
+        android:strokeWidth="1.6"
+        android:strokeAlpha="0.4"
+        android:strokeColor="#93C5FD"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M100,52 L94,94"
+        android:strokeWidth="1.6"
+        android:strokeAlpha="0.4"
+        android:strokeColor="#93C5FD"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M12,96 L52,100 L94,94"
+        android:strokeWidth="1.6"
+        android:strokeAlpha="0.4"
+        android:strokeColor="#93C5FD"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round" />
+
+    <!-- Mesh nodes (drawn as two-arc circles; VectorDrawable has no <circle>). -->
+    <path
+        android:fillColor="#BFDBFE"
+        android:fillAlpha="0.8"
+        android:pathData="M10,14m-3,0a3,3 0 1,0 6,0a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#BFDBFE"
+        android:fillAlpha="0.8"
+        android:pathData="M44,8m-3,0a3,3 0 1,0 6,0a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#BFDBFE"
+        android:fillAlpha="0.8"
+        android:pathData="M86,14m-3,0a3,3 0 1,0 6,0a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#BFDBFE"
+        android:fillAlpha="0.8"
+        android:pathData="M8,50m-3,0a3,3 0 1,0 6,0a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#BFDBFE"
+        android:fillAlpha="0.8"
+        android:pathData="M100,52m-3,0a3,3 0 1,0 6,0a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#BFDBFE"
+        android:fillAlpha="0.8"
+        android:pathData="M12,96m-3,0a3,3 0 1,0 6,0a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#BFDBFE"
+        android:fillAlpha="0.8"
+        android:pathData="M52,100m-3,0a3,3 0 1,0 6,0a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#BFDBFE"
+        android:fillAlpha="0.8"
+        android:pathData="M94,94m-3,0a3,3 0 1,0 6,0a3,3 0 1,0 -6,0" />
+</vector>

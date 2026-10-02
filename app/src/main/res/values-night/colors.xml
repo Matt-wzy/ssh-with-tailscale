@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Dark flavour of the Material 3 scheme. Every surface is dark, so the app never
+  shows a large white area in dark mode (the terminal is dark in both modes).
+-->
+<resources>
+    <color name="md_primary">#4CDADD</color>
+    <color name="md_on_primary">#003739</color>
+    <color name="md_primary_container">#004F51</color>
+    <color name="md_on_primary_container">#6FF6FB</color>
+    <color name="md_secondary">#B1CBCD</color>
+    <color name="md_on_secondary">#1B3436</color>
+    <color name="md_secondary_container">#324B4D</color>
+    <color name="md_on_secondary_container">#CCE8E9</color>
+    <color name="md_tertiary">#B3C8E8</color>
+    <color name="md_on_tertiary">#1C314B</color>
+    <color name="md_background">#0E1414</color>
+    <color name="md_on_background">#E0E3E2</color>
+    <color name="md_surface">#141A1A</color>
+    <color name="md_on_surface">#E0E3E2</color>
+    <color name="md_surface_variant">#3F4949</color>
+    <color name="md_on_surface_variant">#BEC8C8</color>
+    <color name="md_surface_container">#1D2524</color>
+    <color name="md_outline">#899393</color>
+    <color name="md_error">#FFB4AB</color>
+    <color name="md_on_error">#690005</color>
+</resources>

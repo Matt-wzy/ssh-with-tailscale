@@ -1,0 +1,85 @@
+name: Build APK
+
+# ---------------------------------------------------------------------
+# 自动构建当前处于「暂停」状态：只保留 workflow_dispatch（手动触发）。
+# 需要临时跑一次时，在 Actions 页面点 Run workflow，或本地跑等价命令。
+#
+# 恢复自动构建：把下面两行取消注释即可。
+#
+#   push:
+#     branches: [main, master]
+#   pull_request:
+# ---------------------------------------------------------------------
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Signing material is gitignored, so a stray `git add -f` is the only way it
+      # could reach the remote. Catch it before anything else runs.
+      - name: Guard against committed signing material
+        run: |
+          if git ls-files | grep -Ei '\.(jks|keystore)$|^keystore\.properties$'; then
+            echo "::error::signing material is tracked in git -- remove it and rotate the key"
+            exit 1
+          fi
+          echo "ok: no keystore tracked"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      # gomobile@latest requires Go >= 1.26.
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+
+      # The Go tests run before the (slow) gomobile toolchain work so a failure
+      # surfaces in seconds, not after the AAR build.
+      - name: Run Go tests
+        run: cd go/tailscale && go test ./...
+
+      # The GitHub-hosted runner already ships a full Android SDK at
+      # $ANDROID_HOME (cmdline-tools, platform-tools, build-tools, platforms).
+      # We no longer use android-actions/setup-android@v3: it tried to install
+      # the long-removed "tools" package (-> "Failed to find package 'tools'")
+      # and hung on interactive license prompts. We just accept the preinstalled
+      # licenses and add the NDK we need.
+      - name: Set up Android SDK
+        run: |
+          export ANDROID_HOME=/usr/local/lib/android/sdk
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          yes | sdkmanager --licenses || true
+          sdkmanager "ndk;25.1.8937393" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Install gomobile
+        run: go install golang.org/x/mobile/cmd/gomobile@latest
+
+      - name: Build Tailscale AAR (gomobile)
+        run: |
+          set -euo pipefail
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/25.1.8937393"
+          gomobile init || true
+          cd go
+          # gomobile@latest needs golang.org/x/mobile in the module graph.
+          go get -tool golang.org/x/mobile/cmd/gobind
+          mkdir -p ../app/libs
+          gomobile bind -target=android -androidapi 24 -o ../app/libs/tailscale.aar ./...
+
+      - name: Run Kotlin unit tests
+        run: ./gradlew :app:testDebugUnitTest
+
+      - name: Assemble Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk

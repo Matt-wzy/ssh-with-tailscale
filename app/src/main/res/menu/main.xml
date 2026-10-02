@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Toolbar menu. Reconnect stays on the bar (network drops are common); everything
+  else lives in the overflow, reachable from the three-dot button.
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_reconnect"
+        android:title="@string/action_reconnect"
+        app:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/action_connection"
+        android:title="@string/action_connection"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_files"
+        android:title="@string/action_files"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_devices"
+        android:title="@string/action_devices"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_forwards"
+        android:title="@string/action_forwards"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_publish"
+        android:title="@string/action_publish"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_clear"
+        android:title="@string/action_clear"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/action_about"
+        app:showAsAction="never" />
+
+</menu>

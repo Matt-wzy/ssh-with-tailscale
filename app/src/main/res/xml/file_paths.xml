@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Paths the file manager exposes to other apps via FileProvider. The only thing
+  we share out is the Download subtree of our private external storage, where
+  downloaded files land.
+-->
+<paths>
+    <external-files-path name="downloads" path="Download" />
+</paths>

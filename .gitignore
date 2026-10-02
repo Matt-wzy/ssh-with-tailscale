@@ -1,0 +1,31 @@
+# Build artifacts
+app/libs/
+*.aar
+*.apk
+*.apk.*
+build/
+.gradle/
+local.properties
+*.iml
+.DS_Store
+
+# Go
+go/bin/
+go/pkg/
+
+# OS / editor
+*.swp
+.Trash-*/
+
+# Heap dumps (debugging only; can be huge)
+*.hprof
+
+# Local agent/workspace data -- not part of the project
+.workbuddy/
+
+# Release signing material -- back these up, losing them means you cannot
+# upgrade the app in place. keystore.properties.example is the committed
+# template; the real files below never belong in git.
+release.jks
+*.jks
+keystore.properties

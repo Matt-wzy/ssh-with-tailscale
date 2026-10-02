@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Backup / transfer excludes (API 31+). Same rule as backup_rules.xml: the
+  private keys and the Tailscale node identity never leave the device, not to
+  the cloud and not in a device-to-device migration.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="file" path="keys" />
+        <exclude domain="file" path="tailscale" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="file" path="keys" />
+        <exclude domain="file" path="tailscale" />
+    </device-transfer>
+</data-extraction-rules>

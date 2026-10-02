@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material 3 colour scheme, light flavour. The dark one lives in
+  values-night/colors.xml with the same names.
+-->
+<resources>
+    <color name="md_primary">#00696D</color>
+    <color name="md_on_primary">#FFFFFF</color>
+    <color name="md_primary_container">#6FF6FB</color>
+    <color name="md_on_primary_container">#002021</color>
+    <color name="md_secondary">#4A6365</color>
+    <color name="md_on_secondary">#FFFFFF</color>
+    <color name="md_secondary_container">#CCE8E9</color>
+    <color name="md_on_secondary_container">#051F21</color>
+    <color name="md_tertiary">#4B607C</color>
+    <color name="md_on_tertiary">#FFFFFF</color>
+    <color name="md_background">#FAFDFC</color>
+    <color name="md_on_background">#191C1C</color>
+    <color name="md_surface">#FAFDFC</color>
+    <color name="md_on_surface">#191C1C</color>
+    <color name="md_surface_variant">#DAE5E5</color>
+    <color name="md_on_surface_variant">#3F4949</color>
+    <color name="md_surface_container">#EEF1F1</color>
+    <color name="md_outline">#6F7979</color>
+    <color name="md_error">#BA1A1A</color>
+    <color name="md_on_error">#FFFFFF</color>
+</resources>
