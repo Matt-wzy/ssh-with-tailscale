@@ -4,6 +4,7 @@
 # 用法：
 #   ./build.sh            # 默认打 debug 包
 #   ./build.sh release    # 打签名 release 包（需要 keystore.properties + release.jks）
+#   ./build.sh all        # 两个都打（改图标/改资源后请用这个，避免两边产物不一致）
 #
 # 优先用环境变量（$ANDROID_HOME / $JAVA_HOME / $GO_BIN_DIR），缺省值适配常见 Linux/macOS
 # 路径。在普通开发机上只需要有 Android SDK 和 JDK 17+ 即可。
@@ -67,23 +68,36 @@ echo ">> AAR 已生成: app/libs/tailscale.aar"
 # 原生库刚合并完还没索引好）。重跑一次通常就过，所以这里最多重试 3 次。
 echo ">> [2/2] 构建 Android ($FLAVOR)"
 cd "$ROOT"
-TASK=":app:assembleDebug"
-[ "$FLAVOR" = "release" ] && TASK=":app:assembleRelease"
+case "$FLAVOR" in
+  release) FLAVORS=("release") ;;
+  all)     FLAVORS=("debug" "release") ;;
+  *)       FLAVORS=("debug") ;;
+esac
 
-ok=0
-for attempt in 1 2 3; do
-  echo ">> gradle 尝试 $attempt/3: $TASK"
-  if ./gradlew "$TASK" "${@:2}"; then
-    ok=1
-    break
+for flavor in "${FLAVORS[@]}"; do
+  case "$flavor" in
+    release) TASK=":app:assembleRelease" ;;
+    *)       TASK=":app:assembleDebug" ;;
+  esac
+
+  ok=0
+  attempt=0
+  for attempt in 1 2 3; do
+    echo ">> gradle 尝试 $attempt/3: $TASK"
+    if ./gradlew "$TASK" "${@:2}"; then
+      ok=1
+      break
+    fi
+    echo ">> gradle 失败，稍后重试（见上方说明）"
+  done
+
+  if [ "$ok" -ne 1 ]; then
+    echo ">> 构建失败：gradle 连续 $attempt 次未通过，请查看上方错误。" >&2
+    exit 1
   fi
-  echo ">> gradle 失败，稍后重试（见上方说明）"
 done
 
-if [ "$ok" -ne 1 ]; then
-  echo ">> 构建失败：gradle 连续 $attempt 次未通过，请查看上方错误。" >&2
-  exit 1
-fi
-
 echo ">> 完成。产物："
-ls -la "app/build/outputs/apk/$FLAVOR/"*.apk 2>/dev/null || true
+for flavor in "${FLAVORS[@]}"; do
+  ls -la "app/build/outputs/apk/$flavor/"*.apk 2>/dev/null || true
+done
