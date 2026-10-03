@@ -27,5 +27,5 @@ Release APK 用项目自带的 `release.jks` 签名。升级时请确认签名�
 
 ## 注意
 - minSdk 24 / Android 7.0+。
-- applicationId：`org.dpdns.mattsgateway.sshwithtailscale`，与早期 `com.example.sshwithtailscale` 版本互不兼容。
+- applicationId：`org.dpdns.mattsgateway.sshwithtailscale`。
 - 本仓库历史已排扁为 1 个提交；完整开发历史保留在原仓库。

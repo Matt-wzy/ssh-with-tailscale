@@ -1,0 +1,166 @@
+/* SSHWithTailscale 官网自定义样式（配合 Bulma 1.0 主题变量） */
+
+:root {
+  --brand: #2563eb;
+}
+
+/* 主题切换时让颜色平滑过渡 */
+html {
+  scroll-behavior: smooth;
+}
+body,
+.navbar,
+.box,
+.card,
+.footer,
+.code-block,
+.feature-icon {
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+
+/* 顶部导航 */
+.navbar.is-brand {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .06);
+}
+.navbar-brand .brand-title {
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.navbar-brand .brand-logo {
+  border-radius: 10px;
+}
+
+/* 主题切换按钮 */
+#theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-variant-numeric: tabular-nums;
+}
+#theme-toggle .theme-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+#theme-toggle .theme-label {
+  font-size: .85rem;
+}
+
+/* Hero */
+.hero-app {
+  position: relative;
+  overflow: hidden;
+}
+.hero-app .hero-logo {
+  border-radius: 22px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .25);
+}
+.hero-tagline {
+  font-size: 1.15rem;
+  opacity: .92;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+.hero-cta .button {
+  min-width: 11rem;
+}
+
+/* 流量示意图 */
+.flow {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: .5rem;
+}
+.flow .node {
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: 12px;
+  padding: 1rem .6rem;
+  text-align: center;
+  border: 1px solid var(--bulma-border, #dbdbdb);
+}
+.flow .node .node-title {
+  font-weight: 700;
+  font-size: .95rem;
+  overflow-wrap: anywhere;
+}
+.flow .node .node-sub {
+  font-size: .8rem;
+  opacity: .8;
+  overflow-wrap: anywhere;
+}
+.flow .arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  font-size: 1.4rem;
+  font-weight: 700;
+  opacity: .55;
+}
+
+/* 特性卡片 */
+.feature-card {
+  height: 100%;
+}
+.feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 12px;
+  font-size: 1.4rem;
+  margin-bottom: .75rem;
+  background: color-mix(in srgb, var(--brand) 14%, transparent);
+}
+
+/* 代码块 */
+.code-block {
+  position: relative;
+  background: var(--bulma-scheme-main-bis, #f5f5f5);
+  border: 1px solid var(--bulma-border, #dbdbdb);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .9rem;
+  line-height: 1.55;
+}
+
+/* 文档页目录 */
+.docs-toc a {
+  display: block;
+  padding: .3rem 0;
+  opacity: .85;
+}
+.docs-toc a:hover { opacity: 1; }
+
+/* 数据表格 */
+.spec-table td:first-child {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.footer a { text-decoration: underline; }
+
+/* 窄屏（含平板）：改为纵向单列、箭头朝下。
+   这样每个节点占满整行，不会出现换行后箭头与节点错位、看不清先后顺序的问题。 */
+@media (max-width: 1023px) {
+  .flow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .35rem;
+    max-width: 26rem;
+    margin: 0 auto;
+  }
+  .flow .node {
+    flex: 0 0 auto;
+  }
+  .flow .arrow {
+    height: 1.6rem;
+    font-size: 1.2rem;
+    transform: rotate(90deg);
+  }
+}

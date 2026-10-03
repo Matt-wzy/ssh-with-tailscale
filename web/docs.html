@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>使用说明 · SSHWithTailscale</title>
+  <meta name="description" content="SSHWithTailscale 安装、首次连接、终端与 SFTP 文件管理、端口转发、反向导出的使用说明。">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/png" href="assets/img/icon.png">
+  <link rel="stylesheet" href="assets/vendor/bulma/bulma.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    (function () {
+      try {
+        var p = localStorage.getItem('sshws-theme') || 'auto';
+        var r = document.documentElement;
+        if (p === 'light' || p === 'dark') { r.setAttribute('data-theme', p); r.style.colorScheme = p; }
+        else { r.style.colorScheme = 'light dark'; }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+  <nav class="navbar is-brand is-spaced" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="index.html">
+          <img class="brand-logo" src="assets/img/icon.png" width="36" height="36" alt="logo">
+          <span class="brand-title ml-2">SSHWithTailscale</span>
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNav">
+          <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div id="mainNav" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="index.html">介绍</a>
+          <a class="navbar-item is-active" href="docs.html">使用说明</a>
+          <a class="navbar-item" href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">下载</a>
+        </div>
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <a class="button is-light" href="https://github.com/Matt-wzy/ssh-with-tailscale" target="_blank" rel="noopener">
+              <span class="icon"><span>⭐</span></span><span>GitHub</span>
+            </a>
+          </div>
+          <div class="navbar-item">
+            <button id="theme-toggle" class="button is-small" type="button" aria-label="主题切换">
+              <span class="theme-icon">🌗</span><span class="theme-label">自动</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <!-- 目录 -->
+        <aside class="column is-3">
+          <div class="docs-toc box">
+            <p class="menu-label">使用说明</p>
+            <a href="#install">1. 安装</a>
+            <a href="#connect">2. 首次连接</a>
+            <a href="#terminal">3. 终端与复制</a>
+            <a href="#sftp">4. SFTP 文件管理</a>
+            <a href="#forward">5. 端口转发 (-L)</a>
+            <a href="#reverse">6. 反向导出</a>
+            <a href="#devices">7. Tailnet 设备列表</a>
+            <a href="#hostkey">8. 主机密钥校验</a>
+            <a href="#build">9. 自行构建</a>
+          </div>
+        </aside>
+
+        <!-- 正文 -->
+        <div class="column is-9">
+          <h1 class="title is-2">使用说明</h1>
+          <p class="subtitle is-6">以下说明基于 v1.0.0。遇到问题可到
+            <a href="https://github.com/Matt-wzy/ssh-with-tailscale/issues" target="_blank" rel="noopener">GitHub Issues</a> 反馈。</p>
+
+          <h2 id="install" class="title is-4 mt-5">1. 安装</h2>
+          <div class="content">
+            <ol>
+              <li>到 <a href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">Releases</a> 下载 <code>app-release.apk</code>。</li>
+              <li>在系统设置里开启「未知来源」安装权限（不同厂商入口不同）。</li>
+              <li>用 <code>adb</code> 安装，或直接点开 APK 安装：
+                <div class="code-block">adb install -r app-release.apk</div>
+              </li>
+            </ol>
+            <p class="is-size-7">应用 ID 为 <code>org.dpdns.mattsgateway.sshwithtailscale</code>。</p>
+          </div>
+
+          <h2 id="connect" class="title is-4 mt-5">2. 首次连接</h2>
+          <div class="content">
+            <ul>
+              <li>打开 App → 填入 Tailscale 节点的 <strong>auth key</strong>（或用已登录账号）。</li>
+              <li>节点起来后，App 会在 <code>127.0.0.1:1055</code> 起本地 SOCKS5 代理。</li>
+              <li>新建 SSH 连接：填写主机（如 <code>100.10.20.30</code>）、端口、用户名，选择密码或 PEM 私钥认证。</li>
+              <li>首次连接会弹出主机指纹确认（TOFU），确认后写入本地信任列表。</li>
+            </ul>
+          </div>
+
+          <h2 id="terminal" class="title is-4 mt-5">3. 终端与复制</h2>
+          <div class="content">
+            <p>连接成功后进入自绘终端（<code>TERM=xterm-256color</code>）：</p>
+            <ul>
+              <li><strong>长按</strong>屏幕进入选择模式，拖动设置起止位置。</li>
+              <li>选区内会出现「复制 / 取消」操作条，点「复制」写入剪贴板。</li>
+            </ul>
+          </div>
+
+          <h2 id="sftp" class="title is-4 mt-5">4. SFTP 文件管理</h2>
+          <div class="content">
+            <ul>
+              <li>浏览远端目录，<strong>下拉刷新</strong>列表，可按名称排序。</li>
+              <li>多文件<strong>并行</strong>上传 / 下载；下载目录可用 SAF 自由选择。</li>
+              <li>大量小文件自动在<strong>服务器端 tar 打包</strong>后下载，本地再解包，显著提速。</li>
+            </ul>
+          </div>
+
+          <h2 id="forward" class="title is-4 mt-5">5. 端口转发 (-L)</h2>
+          <div class="content">
+            <p>在连接配置里添加本地转发规则，例如把远端 <code>3306</code> 映射到本机 <code>localhost:13306</code>：
+              <div class="code-block">本地 13306 → 远端 100.10.20.30:3306</div>
+            规则持久化保存，下次连接自动下发。（远程 <code>-R</code> 代码已保留，暂未开放 UI。）</p>
+          </div>
+
+          <h2 id="reverse" class="title is-4 mt-5">6. 反向导出</h2>
+          <div class="content">
+            <ul>
+              <li><strong>中继模式</strong>：手机在 tailnet 上监听端口，把连接转到手机局域网内的某台设备。</li>
+              <li><strong>HTTP 代理模式</strong>：让其它 tailnet 设备经手机自身网络出网。</li>
+            </ul>
+          </div>
+
+          <h2 id="devices" class="title is-4 mt-5">7. Tailnet 设备列表</h2>
+          <div class="content">
+            <p>在「设备」页查看当前在线节点；点击任一节点即可把它的 <code>100.x.x.x</code> 地址填入新建连接的「主机」字段。</p>
+          </div>
+
+          <h2 id="hostkey" class="title is-4 mt-5">8. 主机密钥校验</h2>
+          <div class="content">
+            <p>App 记录每台主机的 SSH 指纹（TOFU）。若服务器重装 / 重装 SSH 导致指纹变化，连接会被拒绝并提示：
+              删除旧的信任记录后再连即可。</p>
+          </div>
+
+          <h2 id="build" class="title is-4 mt-5">9. 自行构建</h2>
+          <div class="content">
+            <p>需要 Go 1.26+、Android SDK、NDK 与 JDK 17+。完整步骤见
+              <a href="https://github.com/Matt-wzy/ssh-with-tailscale#构建" target="_blank" rel="noopener">仓库 README · 构建</a>：</p>
+            <div class="code-block">GO_BIN_DIR=~/tools/go/bin ./generate_aar.sh
+./build.sh all   # 同时构建 debug 与 release</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <p class="has-text-weight-semibold">SSHWithTailscale</p>
+          <p class="is-size-7">内置 Tailscale 的 Android SSH 客户端 · 开源 (GPL-3.0-or-later)</p>
+        </div>
+        <div class="column has-text-right">
+          <p>
+            <a href="https://github.com/Matt-wzy/ssh-with-tailscale" target="_blank" rel="noopener">GitHub</a> ·
+            <a href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">下载</a> ·
+            <a href="index.html">介绍</a>
+          </p>
+          <p class="is-size-7 mt-2">© 2026 Matt-wzy</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/theme.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var burger = document.querySelector('.navbar-burger');
+      if (burger) burger.addEventListener('click', function () {
+        var t = document.getElementById(burger.dataset.target);
+        burger.classList.toggle('is-active');
+        t.classList.toggle('is-active');
+      });
+    });
+  </script>
+</body>
+</html>

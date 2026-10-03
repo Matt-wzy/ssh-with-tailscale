@@ -10,16 +10,15 @@
 在 **不占用系统 VpnService** 的前提下，用 Android SSH 客户端访问 Tailscale 内网设备
 （例如 `100.x.x.x` 上的机器）。
 
-为什么做这么一个工具：Android 同一时刻只允许一个 `VpnService`。当工作需要系统 VPN 槽位被占用时，
-官方 Tailscale App（同样基于 `VpnService`）就无法同时运行，只能来回切换。
+为什么做这么一个工具：让你的ssh连接无需每次都单独启动一次官方 Tailscale App。
 
 本项目的做法是把 **Tailscale 直接嵌进 App 进程内**：以 userspace（netstack）模式拉起
 Tailscale 节点，并在 `127.0.0.1:1055` 起一个**本地 SOCKS5 代理**。SSH 客户端把连接
-指向这个 SOCKS 代理，流量就经进程内 WireGuard 隧道到达 tailnet，而不抢占系统 VPN 槽位，
-两者完全并存。无需 root、无需系统 VPN、无需切换。
+指向这个 SOCKS 代理，流量就经进程内 WireGuard 隧道到达 tailnet，而不抢占系统 VPN 槽位。
+无需另外启动 Tailscale 客户端。
 
 ```
- 公司 VPN (系统 VpnService)  ── 正常出网（不受影响）
+ 无需另外启动 Tailscale App —— 节点已内嵌于本 App 进程内
  SSHWithTailscale ──SOCKS 127.0.0.1:1055──> Tailscale netstack ──WireGuard──> 100.x.x.x
 ```
 
@@ -118,9 +117,6 @@ Debug 构建不需要签名。要产出可对外分发的 Release APK，先在�
 ```bash
 ./gradlew assembleRelease
 ```
-
-两个文件都已在 `.gitignore` 中。**请务必异地备份 `release.jks`**：Android 不允许
-用不同签名密钥覆盖安装，密钥丢失意味着已安装的用户无法收到后续更新。
 
 > 未配置签名时 `assembleRelease` 仍会成功，只是产物未签名、无法安装。
 
@@ -260,7 +256,7 @@ Headscale 的 key **不是** `tskey-auth-` 前缀，而是一串随机字符 —
 
 ## 说明 / 取舍
 
-- **SOCKS 模式只承载你显式指向它的流量**（本 App 的 SSH），其余 App 仍走系统/公司 VPN。
+- **SOCKS 模式只承载你显式指向它的流量**（本 App 的 SSH），其余 App 仍走系统默认网络。
 - **MagicDNS**：SOCKS 下建议直接用 `100.x.x.x` 原始 IP，域名解析更稳。
 - 鉴权走 authkey（无头、无需浏览器），适合手机端；如需交互登录可改用 `srv.Up` 的
   OAuth 流程（需额外 UI）。
@@ -274,3 +270,7 @@ Headscale 的 key **不是** `tskey-auth-` 前缀，而是一串随机字符 —
 
 源码中的第三方依赖各自保留原协议（BSD-3-Clause、Apache-2.0 等），详见
 `app/build.gradle.kts` 与 `go/go.mod`，以及 App 内「关于 → 开源组件」。
+
+官网源码在 [`web/`](web)（纯静态，零构建）。其中内联了
+[Bulma](https://bulma.io) 1.0（MIT 许可，`web/assets/vendor/bulma/LICENSE`），
+升级用 `web/update-bulma.sh`。部署由 GitHub Actions 发布到 GitHub Pages。
