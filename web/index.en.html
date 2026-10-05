@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XB04VDYWLQ"></script>
@@ -11,34 +11,34 @@
   </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SSHWithTailscale · 内置 Tailscale 的 Android SSH 客户端</title>
-  <meta name="description" content="一个在不占用系统 VpnService 的前提下，通过进程内 Tailscale + 本地 SOCKS5 访问 Tailscale 内网设备的 Android SSH / SFTP 客户端。">
+  <title>SSHWithTailscale — Android SSH client with Tailscale built in</title>
+  <meta name="description" content="An Android SSH/SFTP client with Tailscale built in. Reach 100.x.x.x devices over SSH without installing the Tailscale app or using a VPN — in-process netstack + local SOCKS5 proxy.">
   <meta name="color-scheme" content="light dark">
   <link rel="icon" type="image/png" href="assets/img/icon.png">
   <link rel="stylesheet" href="assets/vendor/bulma/bulma.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
 
-  <!-- 多语言：中文为主页，英文见 index.en.html -->
+  <!-- Multilingual: English page; Chinese at index.html -->
   <link rel="alternate" hreflang="zh-CN" href="https://ssh-with-tailscale.mattsgateway.dpdns.org/index.html">
   <link rel="alternate" hreflang="en" href="https://ssh-with-tailscale.mattsgateway.dpdns.org/index.en.html">
   <link rel="alternate" hreflang="x-default" href="https://ssh-with-tailscale.mattsgateway.dpdns.org/index.html">
-  <link rel="canonical" href="https://ssh-with-tailscale.mattsgateway.dpdns.org/index.html">
+  <link rel="canonical" href="https://ssh-with-tailscale.mattsgateway.dpdns.org/index.en.html">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="SSHWithTailscale">
-  <meta property="og:title" content="SSHWithTailscale — 内置 Tailscale 的 Android SSH 客户端">
-  <meta property="og:description" content="不占用系统 VPN 槽位、无需另外开启 Tailscale 客户端，即可经进程内 Tailscale + 本地 SOCKS5 访问 100.x.x.x 内网设备。">
-  <meta property="og:url" content="https://ssh-with-tailscale.mattsgateway.dpdns.org/">
+  <meta property="og:title" content="SSHWithTailscale — Android SSH client with Tailscale built in">
+  <meta property="og:description" content="Connect to 100.x.x.x over SSH without installing the Tailscale app or using a VPN. In-process netstack + local SOCKS5 proxy at 127.0.0.1:1055.">
+  <meta property="og:url" content="https://ssh-with-tailscale.mattsgateway.dpdns.org/index.en.html">
   <meta property="og:image" content="https://ssh-with-tailscale.mattsgateway.dpdns.org/assets/img/icon.png">
-  <meta property="og:locale" content="zh_CN">
-  <meta property="og:locale:alternate" content="en">
+  <meta property="og:locale" content="en">
+  <meta property="og:locale:alternate" content="zh_CN">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="SSHWithTailscale">
-  <meta name="twitter:description" content="内置 Tailscale 的 Android SSH 客户端：无需系统 VPN、无需另外开 Tailscale 即可 SSH 进 100.x.x.x。">
+  <meta name="twitter:description" content="Android SSH client with Tailscale built in: no system VPN, no separate Tailscale app — SSH into 100.x.x.x from your phone.">
 
-  <!-- 结构化数据（GEO / 实体识别） -->
+  <!-- Structured data (GEO / entity recognition) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -57,7 +57,7 @@
   }
   </script>
 
-  <!-- 早期设置主题，避免首屏闪烁 -->
+  <!-- Early theme set to avoid flash -->
   <script>
     (function () {
       try {
@@ -69,18 +69,18 @@
     })();
   </script>
 
-  <!-- 按浏览器语言自动切换（仅首次，之后尊重用户选择） -->
+  <!-- Auto-switch by browser language (first visit only; respects user choice after) -->
   <script>
     (function () {
       function getLang(){ try { return localStorage.getItem('sshws-lang'); } catch (e) { return null; } }
       function setLang(l){ try { localStorage.setItem('sshws-lang', l); } catch (e) {} }
       window.__sshwsSetLang = setLang;
       var choice = getLang();
-      var isZh = (navigator.language || 'zh').toLowerCase().indexOf('zh') === 0;
+      var isZh = (navigator.language || 'en').toLowerCase().indexOf('zh') === 0;
       var here = location.pathname.endsWith('index.en.html') ? 'en' : 'zh';
       if (!choice) {
-        if (here === 'zh' && !isZh) { location.replace('index.en.html'); return; }
         if (here === 'en' && isZh)  { location.replace('index.html'); return; }
+        if (here === 'zh' && !isZh) { location.replace('index.en.html'); return; }
       } else if (choice !== here) {
         location.replace(choice === 'en' ? 'index.en.html' : 'index.html'); return;
       }
@@ -89,11 +89,11 @@
 </head>
 <body>
 
-  <!-- 导航栏 -->
+  <!-- Navbar -->
   <nav class="navbar is-brand is-spaced" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
-        <a class="navbar-item" href="index.html">
+        <a class="navbar-item" href="index.en.html">
           <img class="brand-logo" src="assets/img/icon.png" width="36" height="36" alt="logo">
           <span class="brand-title ml-2">SSHWithTailscale</span>
         </a>
@@ -104,9 +104,9 @@
       </div>
       <div id="mainNav" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item is-active" href="index.html">介绍</a>
-          <a class="navbar-item" href="docs.html">使用说明</a>
-          <a class="navbar-item" href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">下载</a>
+          <a class="navbar-item is-active" href="index.en.html">Overview</a>
+          <a class="navbar-item" href="docs.html">Docs</a>
+          <a class="navbar-item" href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">Download</a>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
@@ -115,11 +115,11 @@
             </a>
           </div>
           <div class="navbar-item">
-            <a class="button is-small" id="lang-switch" href="index.en.html">🌐 English</a>
+            <a class="button is-small" id="lang-switch" href="index.html">🌐 中文</a>
           </div>
           <div class="navbar-item">
-            <button id="theme-toggle" class="button is-small" type="button" aria-label="主题切换">
-              <span class="theme-icon">🌗</span><span class="theme-label">自动</span>
+            <button id="theme-toggle" class="button is-small" type="button" aria-label="Toggle theme">
+              <span class="theme-icon">🌗</span><span class="theme-label">Auto</span>
             </button>
           </div>
         </div>
@@ -131,29 +131,29 @@
   <section class="hero is-medium is-primary hero-app">
     <div class="hero-body">
       <div class="container has-text-centered">
-        <img class="hero-logo" src="assets/img/icon.png" width="108" height="108" alt="SSHWithTailscale 图标">
+        <img class="hero-logo" src="assets/img/icon.png" width="108" height="108" alt="SSHWithTailscale icon">
         <h1 class="title is-1 mt-4">SSHWithTailscale</h1>
-        <p class="hero-tagline">内置 Tailscale 的 Android SSH / SFTP 客户端。<br>
-          不抢占系统 VPN 槽位，无需另外开启 Tailscale 客户端即可开始连接。</p>
+        <p class="hero-tagline">An Android SSH / SFTP client with Tailscale built in.<br>
+          No system VPN slot taken, no separate Tailscale app needed to start a connection.</p>
         <div class="buttons is-centered hero-cta mt-5">
           <a class="button is-white is-medium is-rounded" href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">
-            ⬇ 下载 APK
+            ⬇ Download APK
           </a>
-          <a class="button is-outlined is-light is-medium is-rounded" href="docs.html">使用说明</a>
+          <a class="button is-outlined is-light is-medium is-rounded" href="docs.html">Docs</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 流量示意图 -->
+  <!-- How it works -->
   <section class="section">
     <div class="container">
-      <h2 class="title is-4 has-text-centered">它怎么工作？</h2>
-      <p class="subtitle is-6 has-text-centered mb-5">把 Tailscale 直接嵌进 App 进程，在本地起一个 SOCKS5 代理，SSH 流量经进程内 WireGuard 隧道到达 tailnet。</p>
+      <h2 class="title is-4 has-text-centered">How it works</h2>
+      <p class="subtitle is-6 has-text-centered mb-5">Tailscale is embedded inside the app process; a local SOCKS5 proxy carries SSH traffic through an in-process WireGuard tunnel to your tailnet.</p>
       <div class="flow">
         <div class="node">
-          <div class="node-title">无需另外启动</div>
-          <div class="node-sub">Tailscale App</div>
+          <div class="node-title">No separate</div>
+          <div class="node-sub">Tailscale app</div>
         </div>
         <div class="arrow">→</div>
         <div class="node">
@@ -163,103 +163,103 @@
         <div class="arrow">→</div>
         <div class="node">
           <div class="node-title">Tailscale netstack</div>
-          <div class="node-sub">进程内<br>userspace 模式</div>
+          <div class="node-sub">in-process<br>userspace mode</div>
         </div>
         <div class="arrow">→</div>
         <div class="node">
           <div class="node-title">WireGuard</div>
-          <div class="node-sub">加密隧道</div>
+          <div class="node-sub">encrypted tunnel</div>
         </div>
         <div class="arrow">→</div>
         <div class="node has-text-link">
           <div class="node-title">100.x.x.x</div>
-          <div class="node-sub">tailnet 内网设备</div>
+          <div class="node-sub">tailnet device</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 特性 -->
+  <!-- Features -->
   <section class="section">
     <div class="container">
-      <h2 class="title is-4 has-text-centered mb-6">功能特性</h2>
+      <h2 class="title is-4 has-text-centered mb-6">Features</h2>
       <div class="columns is-multiline">
         <div class="column is-one-third">
           <div class="box feature-card">
             <span class="feature-icon">🔐</span>
             <h3 class="title is-5">SSH over tailnet</h3>
-            <p class="content">经 SOCKS5 走 WireGuard 隧道连到 <code>100.x.x.x</code>，支持密码与 PEM 私钥认证，内置自绘终端（可长按选择复制）。</p>
+            <p class="content">Connect to <code>100.x.x.x</code> through the SOCKS5 → WireGuard tunnel. Password and PEM key auth. Built-in terminal (long-press to select/copy).</p>
           </div>
         </div>
         <div class="column is-one-third">
           <div class="box feature-card">
             <span class="feature-icon">🔁</span>
-            <h3 class="title is-5">端口转发</h3>
-            <p class="content">本地 <code>-L</code> 与远程 <code>-R</code> 规则可持久化，每次 SSH 连接自动下发，无需重复配置。</p>
+            <h3 class="title is-5">Port forwarding</h3>
+            <p class="content">Local <code>-L</code> and remote <code>-R</code> rules persist and re-apply on every SSH connection — no repeated setup.</p>
           </div>
         </div>
         <div class="column is-one-third">
           <div class="box feature-card">
             <span class="feature-icon">🌐</span>
-            <h3 class="title is-5">反向导出</h3>
-            <p class="content">手机在 tailnet 上监听端口，既作中继转发到局域网设备，也可作 HTTP 代理让其它节点经手机出网。</p>
+            <h3 class="title is-5">Reverse export</h3>
+            <p class="content">The phone listens on a tailnet port — relay to LAN devices, or act as an HTTP proxy so other nodes exit through the phone.</p>
           </div>
         </div>
         <div class="column is-one-third">
           <div class="box feature-card">
             <span class="feature-icon">📁</span>
-            <h3 class="title is-5">SFTP 文件管理</h3>
-            <p class="content">浏览、上传、下载，多文件并行；大量碎文件自动在服务器端 <code>tar</code> 打包后下载、本地解包。</p>
+            <h3 class="title is-5">SFTP file manager</h3>
+            <p class="content">Browse, upload, download in parallel; lots of small files are <code>tar</code>-packed on the server, then extracted locally.</p>
           </div>
         </div>
         <div class="column is-one-third">
           <div class="box feature-card">
             <span class="feature-icon">📡</span>
-            <h3 class="title is-5">Tailnet 设备列表</h3>
-            <p class="content">查看在线节点，点选即可把目标地址填入 SSH 主机，免去手抄 <code>100.x.x.x</code>。</p>
+            <h3 class="title is-5">Tailnet device list</h3>
+            <p class="content">See online nodes and tap one to fill the SSH host — no manual typing of <code>100.x.x.x</code>.</p>
           </div>
         </div>
         <div class="column is-one-third">
           <div class="box feature-card">
             <span class="feature-icon">🛡️</span>
-            <h3 class="title is-5">主机密钥校验</h3>
-            <p class="content">TOFU（首次连接信任）策略记录 SSH 主机指纹，密钥变更时拒绝连接并给出恢复步骤。</p>
+            <h3 class="title is-5">Host key check</h3>
+            <p class="content">TOFU records the SSH fingerprint; a key change is rejected with recovery steps.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 为什么 -->
+  <!-- Why -->
   <section class="section">
     <div class="container">
       <div class="box">
-        <h2 class="title is-4">为什么需要它？</h2>
+        <h2 class="title is-4">Why you need it</h2>
         <div class="content">
-          <p>Android 同一时刻只允许一个 <code>VpnService</code>。当系统 VPN 槽位已被占用时，
-            官方 Tailscale App（同样基于 <code>VpnService</code>）就无法同时运行，只能来回切换。</p>
-          <p>本项目的做法是把 <strong>Tailscale 直接嵌进 App 进程内</strong>：以 userspace（netstack）模式拉起 Tailscale 节点，
-            并在 <code>127.0.0.1:1055</code> 起一个<strong>本地 SOCKS5 代理</strong>。SSH 客户端把连接指向这个 SOCKS 代理，
-            流量就经进程内 WireGuard 隧道到达 tailnet，而不抢占系统 VPN 槽位。
-            <strong>无需 root、无需系统 VPN、无需切换，也无需另外开启 Tailscale 客户端。</strong></p>
+          <p>Android allows only one <code>VpnService</code> at a time. When the system VPN slot is taken,
+            the official Tailscale app (also based on <code>VpnService</code>) can't run alongside it — you end up switching back and forth.</p>
+          <p>This project <strong>embeds Tailscale directly inside the app process</strong>: it starts a Tailscale node in userspace (netstack) mode
+            and opens a <strong>local SOCKS5 proxy</strong> at <code>127.0.0.1:1055</code>. The SSH client points at that proxy, so traffic
+            travels through an in-process WireGuard tunnel to your tailnet without taking the system VPN slot.
+            <strong>No root, no system VPN, no switching, and no separate Tailscale app.</strong></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 页脚 -->
+  <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <div class="columns">
         <div class="column">
           <p class="has-text-weight-semibold">SSHWithTailscale</p>
-          <p class="is-size-7">内置 Tailscale 的 Android SSH 客户端 · 开源 (GPL-3.0-or-later)</p>
+          <p class="is-size-7">Android SSH client with Tailscale built in · Open source (GPL-3.0-or-later)</p>
         </div>
         <div class="column has-text-right">
           <p>
             <a href="https://github.com/Matt-wzy/ssh-with-tailscale" target="_blank" rel="noopener">GitHub</a> ·
-            <a href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">下载</a> ·
-            <a href="docs.html">使用说明</a>
+            <a href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">Download</a> ·
+            <a href="docs.html">Docs</a>
           </p>
           <p class="is-size-7 mt-2">© 2026 Matt-wzy</p>
         </div>
@@ -269,7 +269,6 @@
 
   <script src="assets/js/theme.js"></script>
   <script>
-    // 移动端汉堡菜单
     document.addEventListener('DOMContentLoaded', function () {
       var burger = document.querySelector('.navbar-burger');
       if (burger) burger.addEventListener('click', function () {
@@ -277,7 +276,6 @@
         burger.classList.toggle('is-active');
         t.classList.toggle('is-active');
       });
-      // 语言切换：记录偏好后跳转（自动切换脚本不会再弹回）
       var ls = document.getElementById('lang-switch');
       if (ls) ls.addEventListener('click', function () {
         try { localStorage.setItem('sshws-lang', location.pathname.endsWith('index.en.html') ? 'zh' : 'en'); } catch (e) {}

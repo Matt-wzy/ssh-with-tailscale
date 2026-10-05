@@ -8,11 +8,21 @@
   const KEY = 'sshws-theme';
   const root = document.documentElement;
   const ORDER = ['auto', 'light', 'dark'];
+  // 跟随页面语言（<html lang="zh-CN"> → 中文，其余 → English）
+  const LANG = (root.lang || 'zh').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
   const META = {
-    auto:  { icon: '🌗', label: '自动' },
-    light: { icon: '☀️', label: '日间' },
-    dark:  { icon: '🌙', label: '夜间' },
-  };
+    zh: {
+      auto:  { icon: '🌗', label: '自动' },
+      light: { icon: '☀️', label: '日间' },
+      dark:  { icon: '🌙', label: '夜间' },
+    },
+    en: {
+      auto:  { icon: '🌗', label: 'Auto' },
+      light: { icon: '☀️', label: 'Light' },
+      dark:  { icon: '🌙', label: 'Dark' },
+    },
+  }[LANG];
+  const ARIA = LANG === 'zh' ? '主题模式' : 'Theme';
 
   function current() {
     const v = localStorage.getItem(KEY);
@@ -39,7 +49,7 @@
     const label = btn.querySelector('.theme-label');
     if (icon) icon.textContent = m.icon;
     if (label) label.textContent = m.label;
-    btn.setAttribute('aria-label', '主题模式：' + m.label + '（点击切换）');
+    btn.setAttribute('aria-label', ARIA + ': ' + m.label + ' (click to switch)');
     btn.dataset.theme = pref;
   }
 
