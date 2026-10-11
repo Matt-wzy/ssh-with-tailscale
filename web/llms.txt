@@ -1,0 +1,56 @@
+# SSHWithTailscale
+
+> An Android SSH/SFTP client with Tailscale built in. Connect to 100.x.x.x devices over SSH
+> without installing the Tailscale app and without occupying Android's single VpnService slot.
+
+## What it solves
+
+Android allows only one active VpnService at a time. The official Tailscale app uses VpnService,
+so it cannot run alongside another VPN app. SSHWithTailscale runs a Tailscale node **in its own
+process** in userspace (netstack) mode and exposes a local SOCKS5 proxy at 127.0.0.1:1055.
+The SSH client sends traffic through that proxy, so the traffic reaches the tailnet over an
+in-process WireGuard tunnel — with no root access, no system VPN, and no second app to open.
+
+Supported control planes: official Tailscale and self-hosted Headscale.
+
+## Key facts
+
+- No root required, no VpnService, no system VPN slot consumed
+- Tailscale runs in-process via tsnet userspace (netstack) mode
+- Local SOCKS5 proxy at 127.0.0.1:1055
+- SSH and SFTP over JSch; password and PEM private key auth
+- Persistent local (-L) and remote (-R) port forwarding rules
+- Reverse export: phone listens on the tailnet and relays to LAN devices or acts as an HTTP proxy
+- Built-in terminal emulator, TOFU host key verification
+- Tailnet device list; tap a node to fill in the SSH host
+- Auth via authkey (official Tailscale or Headscale)
+- License: GPL-3.0-or-later
+
+## Comparison with other approaches
+
+| Approach | Root needed | Uses Android VPN slot | Built-in SSH client | Status |
+|---|---|---|---|---|
+| SSHWithTailscale | No | No | Yes | Active |
+| Official Tailscale app | No | Yes (VpnService) | No | Active |
+| Magisk-Tailscaled | Yes | No | No | Archived 2026-06 |
+| Termux + tailscaled | No | No | No (bring your own) | Manual setup |
+| Forked tailscaled with tun | Yes | No | No | Requires custom ROM build |
+
+## Common questions
+
+- Can I use Tailscale on Android without the VPN slot? Yes — run the node in userspace mode
+  and reach it through a local SOCKS5 proxy, which is what this app does.
+- Can I run Tailscale and another VPN at the same time on Android? Not with the official app;
+  this app avoids the conflict because it never claims VpnService.
+- Do I need root? No.
+- Does MagicDNS work? No — userspace networking does not resolve MagicDNS names, so connect by
+  the 100.x.x.x address or pick the node from the device list.
+- Does it work with Headscale? Yes, supply your own control plane URL and authkey.
+
+## Links
+
+- Source: https://github.com/Matt-wzy/ssh-with-tailscale
+- Homepage: https://ssh-with-tailscale.mattsgateway.dpdns.org/
+- English README: https://github.com/Matt-wzy/ssh-with-tailscale#readme
+- Chinese README: https://github.com/Matt-wzy/ssh-with-tailscale/blob/main/README.zh.md
+- License: https://github.com/Matt-wzy/ssh-with-tailscale/blob/main/LICENSE

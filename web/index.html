@@ -106,6 +106,7 @@
         <div class="navbar-start">
           <a class="navbar-item is-active" href="index.html">介绍</a>
           <a class="navbar-item" href="docs.html">使用说明</a>
+          <a class="navbar-item" href="faq.html">常见问题</a>
           <a class="navbar-item" href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">下载</a>
         </div>
         <div class="navbar-end">
@@ -247,6 +248,45 @@
     </div>
   </section>
 
+  <!-- 方案对比（GEO：把差异化摆到权重最高的页面上） -->
+  <section class="section pt-0">
+    <div class="container">
+      <div class="box">
+        <h2 class="title is-4">和其它方案比，差在哪？</h2>
+        <div class="content">
+          <table class="table is-fullwidth is-striped spec-table">
+            <thead>
+              <tr><th>方案</th><th>需要 root</th><th>占用系统 VPN 槽位</th><th>自带 SSH 客户端</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>SSHWithTailscale</td><td>否</td><td>否</td><td>是</td></tr>
+              <tr><td>官方 Tailscale App</td><td>否</td><td>是（VpnService）</td><td>否</td></tr>
+              <tr><td>Magisk-Tailscaled</td><td>是</td><td>否</td><td>否</td></tr>
+              <tr><td>Termux + tailscaled</td><td>否</td><td>否</td><td>否（需自备）</td></tr>
+            </tbody>
+          </table>
+          <p class="mt-4">免 root、不抢占系统 VPN 槽位、无需另外开启 Tailscale 客户端——
+            <a href="faq.html">查看完整对比与常见问题 →</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 常见问题预告 -->
+  <section class="section pt-0">
+    <div class="container">
+      <div class="box">
+        <h2 class="title is-4">常见问题</h2>
+        <div class="content">
+          <p><strong>不 root 能用 Tailscale 吗？</strong>能。进程内 userspace 模式起节点，全程不需要 root。</p>
+          <p><strong>系统 VPN 已经被别的应用占用了？</strong>不影响。本项目不申请 <code>VpnService</code>，可以共存。</p>
+          <p><strong>MagicDNS 能用吗？</strong>不能用。请用 <code>100.x.x.x</code> 地址，或从设备列表点选节点。</p>
+          <p class="mt-4"><a href="faq.html">全部常见问题 →</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 页脚 -->
   <footer class="footer">
     <div class="container">
@@ -259,7 +299,8 @@
           <p>
             <a href="https://github.com/Matt-wzy/ssh-with-tailscale" target="_blank" rel="noopener">GitHub</a> ·
             <a href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">下载</a> ·
-            <a href="docs.html">使用说明</a>
+            <a href="docs.html">使用说明</a> ·
+            <a href="faq.html">常见问题</a>
           </p>
           <p class="is-size-7 mt-2">© 2026 Matt-wzy</p>
         </div>

@@ -106,6 +106,7 @@
         <div class="navbar-start">
           <a class="navbar-item is-active" href="index.en.html">Overview</a>
           <a class="navbar-item" href="docs.html">Docs</a>
+          <a class="navbar-item" href="faq.en.html">FAQ</a>
           <a class="navbar-item" href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">Download</a>
         </div>
         <div class="navbar-end">
@@ -247,6 +248,45 @@
     </div>
   </section>
 
+  <!-- Comparison (GEO: put the differentiation on the page with the most authority) -->
+  <section class="section pt-0">
+    <div class="container">
+      <div class="box">
+        <h2 class="title is-4">How it compares</h2>
+        <div class="content">
+          <table class="table is-fullwidth is-striped spec-table">
+            <thead>
+              <tr><th>Approach</th><th>Root needed</th><th>Uses Android VPN slot</th><th>Built-in SSH client</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>SSHWithTailscale</td><td>No</td><td>No</td><td>Yes</td></tr>
+              <tr><td>Official Tailscale app</td><td>No</td><td>Yes (VpnService)</td><td>No</td></tr>
+              <tr><td>Magisk-Tailscaled</td><td>Yes</td><td>No</td><td>No</td></tr>
+              <tr><td>Termux + tailscaled</td><td>No</td><td>No</td><td>No (bring your own)</td></tr>
+            </tbody>
+          </table>
+          <p class="mt-4">No root, no Android VPN slot, and no separate Tailscale app to keep open —
+            <a href="faq.en.html">see the full comparison and FAQ →</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ teaser -->
+  <section class="section pt-0">
+    <div class="container">
+      <div class="box">
+        <h2 class="title is-4">Common questions</h2>
+        <div class="content">
+          <p><strong>Can I use Tailscale on Android without root?</strong> Yes. The node runs in-process in userspace mode; root is never needed.</p>
+          <p><strong>Another app already uses the system VPN?</strong> No conflict. This app never claims <code>VpnService</code>, so both can run.</p>
+          <p><strong>Does MagicDNS work?</strong> No. Use the <code>100.x.x.x</code> address, or pick a node from the device list.</p>
+          <p class="mt-4"><a href="faq.en.html">All common questions →</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -259,7 +299,8 @@
           <p>
             <a href="https://github.com/Matt-wzy/ssh-with-tailscale" target="_blank" rel="noopener">GitHub</a> ·
             <a href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">Download</a> ·
-            <a href="docs.html">Docs</a>
+            <a href="docs.html">Docs</a> ·
+            <a href="faq.en.html">FAQ</a>
           </p>
           <p class="is-size-7 mt-2">© 2026 Matt-wzy</p>
         </div>

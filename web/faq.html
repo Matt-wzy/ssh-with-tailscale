@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XB04VDYWLQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XB04VDYWLQ');
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>常见问题 · Android 上不 root、不占 VPN 槽位连接 Tailscale 内网 SSH</title>
+  <meta name="description" content="解答 Android 使用 Tailscale 远程 SSH 的常见问题：不 root 能否用 Tailscale、系统 VPN 槽位被占用怎么办、不想单独开 Tailscale App 怎么连 100.x.x.x、MagicDNS 为什么不可用，以及与官方客户端、Magisk-Tailscaled、Termux 方案的对比。">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/png" href="assets/img/icon.png">
+  <link rel="stylesheet" href="assets/vendor/bulma/bulma.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- 多语言 -->
+  <link rel="alternate" hreflang="zh-CN" href="https://ssh-with-tailscale.mattsgateway.dpdns.org/faq.html">
+  <link rel="alternate" hreflang="en" href="https://ssh-with-tailscale.mattsgateway.dpdns.org/faq.en.html">
+  <link rel="alternate" hreflang="x-default" href="https://ssh-with-tailscale.mattsgateway.dpdns.org/faq.html">
+  <link rel="canonical" href="https://ssh-with-tailscale.mattsgateway.dpdns.org/faq.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="SSHWithTailscale">
+  <meta property="og:title" content="Android 上不 root、不占 VPN 槽位连接 Tailscale 内网 SSH">
+  <meta property="og:description" content="SSHWithTailscale 常见问题与方案对比：免 root、不占用系统 VpnService、内置 SSH/SFTP 客户端。">
+  <meta property="og:url" content="https://ssh-with-tailscale.mattsgateway.dpdns.org/faq.html">
+  <meta property="og:image" content="https://ssh-with-tailscale.mattsgateway.dpdns.org/assets/img/icon.png">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="SSHWithTailscale 常见问题">
+  <meta name="twitter:description" content="免 root、不占系统 VPN 槽位、无需另外开 Tailscale 客户端即可 SSH 进 100.x.x.x。">
+
+  <!-- 结构化数据（GEO / 实体识别 + AI 可引用问答） -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://ssh-with-tailscale.mattsgateway.dpdns.org/#app",
+        "name": "SSHWithTailscale",
+        "operatingSystem": "Android",
+        "applicationCategory": "DeveloperApplication",
+        "applicationSubCategory": "SSH client",
+        "description": "An Android SSH/SFTP client with Tailscale built in. Connect to 100.x.x.x devices over SSH without installing the Tailscale app and without occupying Android's single VpnService slot.",
+        "softwareVersion": "1.0",
+        "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+        "url": "https://ssh-with-tailscale.mattsgateway.dpdns.org/",
+        "sameAs": ["https://github.com/Matt-wzy/ssh-with-tailscale"],
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Person", "name": "Matt-wzy", "url": "https://github.com/Matt-wzy" },
+        "featureList": [
+          "SSH and SFTP over tailnet via JSch",
+          "In-process Tailscale node in userspace (netstack) mode",
+          "Local SOCKS5 proxy at 127.0.0.1:1055",
+          "No root access and no Android VpnService required",
+          "Persistent local (-L) and remote (-R) port forwarding",
+          "Reverse export: relay to LAN devices or act as an HTTP proxy",
+          "Tailnet device list with one-tap host fill",
+          "TOFU host key verification",
+          "Works with official Tailscale and self-hosted Headscale"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://ssh-with-tailscale.mattsgateway.dpdns.org/faq.html#faq",
+        "about": { "@id": "https://ssh-with-tailscale.mattsgateway.dpdns.org/#app" },
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Android 上不 root 可以使用 Tailscale 吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "可以。SSHWithTailscale 用 tsnet 在自己的进程内以 userspace（netstack）模式拉起 Tailscale 节点，并在 127.0.0.1:1055 起一个本地 SOCKS5 代理，SSH 流量经进程内 WireGuard 隧道到达 tailnet。整个过程不需要 root 权限。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Android 的系统 VPN 槽位被占用时，怎么连 Tailscale 内网设备？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Android 同一时刻只允许一个 VpnService。官方 Tailscale App 基于 VpnService，槽位被占用时就无法同时运行。SSHWithTailscale 不申请 VpnService，而是在进程内跑 Tailscale 节点并走本地 SOCKS5，因此不占用系统 VPN 槽位，可以与其他 VPN 共存。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "不想为了 SSH 单独开一个 Tailscale App，有替代方案吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SSHWithTailscale 把 Tailscale 节点和 SSH/SFTP 客户端打包在同一个 App 里，打开即用，无需额外安装或启动官方 Tailscale 客户端，也不需要改动手机上已有的网络或代理设置。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "userspace 模式下 MagicDNS 能用吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "不能。userspace networking 不解析 MagicDNS 名称，因此请用 100.x.x.x 形式的目标地址，或直接从 App 内的 Tailnet 设备列表点选节点自动填入主机。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "SSHWithTailscale 支持自建 Headscale 吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "支持。填入自建控制面地址和对应的 authkey 即可，可同时使用官方 Tailscale 与自托管 Headscale。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "和 Magisk-Tailscaled、Termux 跑 tailscaled 相比有什么区别？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Magisk-Tailscaled 需要 root，且上游仓库已于 2026 年 6 月归档；Termux 方案需要手动下载二进制、配置和保活，且 SSH 客户端要另外准备。SSHWithTailscale 免 root、开箱即用，并自带 SSH/SFTP 客户端、终端与端口转发。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <script>
+    (function () {
+      try {
+        var p = localStorage.getItem('sshws-theme') || 'auto';
+        var r = document.documentElement;
+        if (p === 'light' || p === 'dark') { r.setAttribute('data-theme', p); r.style.colorScheme = p; }
+        else { r.style.colorScheme = 'light dark'; }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+  <nav class="navbar is-brand is-spaced" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="index.html">
+          <img class="brand-logo" src="assets/img/icon.png" width="36" height="36" alt="logo">
+          <span class="brand-title ml-2">SSHWithTailscale</span>
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNav">
+          <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div id="mainNav" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="index.html">介绍</a>
+          <a class="navbar-item" href="docs.html">使用说明</a>
+          <a class="navbar-item is-active" href="faq.html">常见问题</a>
+          <a class="navbar-item" href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">下载</a>
+        </div>
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <a class="button is-light" href="https://github.com/Matt-wzy/ssh-with-tailscale" target="_blank" rel="noopener">
+              <span class="icon"><span>⭐</span></span><span>GitHub</span>
+            </a>
+          </div>
+          <div class="navbar-item">
+            <a class="button is-small" href="faq.en.html">🌐 English</a>
+          </div>
+          <div class="navbar-item">
+            <button id="theme-toggle" class="button is-small" type="button" aria-label="主题切换">
+              <span class="theme-icon">🌗</span><span class="theme-label">自动</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title is-2">常见问题</h1>
+      <p class="subtitle is-6">Android 上不 root、不占 VPN 槽位连接 Tailscale 内网 SSH，以及与其它方案的差异。</p>
+    </div>
+  </section>
+
+  <section class="section pt-0">
+    <div class="container">
+      <div class="box">
+        <h2 class="title is-4">方案对比</h2>
+        <div class="content">
+          <table class="table is-fullwidth is-striped spec-table">
+            <thead>
+              <tr><th>方案</th><th>需要 root</th><th>占用系统 VPN 槽位</th><th>自带 SSH 客户端</th><th>状态</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>SSHWithTailscale</td><td>否</td><td>否</td><td>是</td><td>维护中</td></tr>
+              <tr><td>官方 Tailscale App</td><td>否</td><td>是（VpnService）</td><td>否</td><td>维护中</td></tr>
+              <tr><td>Magisk-Tailscaled</td><td>是</td><td>否</td><td>否</td><td>上游已于 2026-06 归档</td></tr>
+              <tr><td>Termux + tailscaled</td><td>否</td><td>否</td><td>否（需自备）</td><td>需手动搭建与保活</td></tr>
+              <tr><td>自行编译带 tun 的 tailscaled</td><td>是</td><td>否</td><td>否</td><td>需自编译 ROM</td></tr>
+            </tbody>
+          </table>
+          <p class="mt-4">
+            <strong>免 root、不抢占系统 VPN 槽位、无需另外开启 Tailscale 客户端</strong>——
+            这三件事同时满足的 Android SSH 方案，目前只有 SSHWithTailscale。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pt-0">
+    <div class="container">
+      <div class="box">
+        <h2 class="title is-4">常见问题</h2>
+        <div class="content">
+
+          <h3 class="title is-5">Android 上不 root 可以使用 Tailscale 吗？</h3>
+          <p>可以。SSHWithTailscale 用 <code>tsnet</code> 在自己的进程内以 userspace（netstack）模式拉起 Tailscale 节点，
+             并在 <code>127.0.0.1:1055</code> 起一个本地 SOCKS5 代理，SSH 流量经进程内 WireGuard 隧道到达 tailnet。
+             整个过程不需要 root 权限。</p>
+
+          <h3 class="title is-5">系统 VPN 槽位已经被占用，怎么连 Tailscale 内网设备？</h3>
+          <p>Android 同一时刻只允许一个 <code>VpnService</code>。官方 Tailscale App 基于 <code>VpnService</code>，
+             槽位被占用时就无法同时运行，只能来回切换。SSHWithTailscale 不申请 <code>VpnService</code>，
+             而是在进程内跑 Tailscale 节点并走本地 SOCKS5，因此不占用系统 VPN 槽位，可以与其他 VPN 共存。</p>
+
+          <h3 class="title is-5">不想为了 SSH 单独开一个 Tailscale App，有替代方案吗？</h3>
+          <p>SSHWithTailscale 把 Tailscale 节点与 SSH/SFTP 客户端打包在同一个 App 里，打开即用：
+             无需另外安装或启动官方 Tailscale 客户端，也不需要改动手机上已有的网络或代理设置。</p>
+
+          <h3 class="title is-5">userspace 模式下 MagicDNS 能用吗？</h3>
+          <p>不能。userspace networking 不解析 MagicDNS 名称，请用 <code>100.x.x.x</code> 形式的目标地址，
+             或直接从 App 内的 Tailnet 设备列表点选节点自动填入主机。</p>
+
+          <h3 class="title is-5">支持自建 Headscale 吗？</h3>
+          <p>支持。填入自建控制面地址与对应的 authkey 即可，官方 Tailscale 与自托管 Headscale 都能用。</p>
+
+          <h3 class="title is-5">和 Magisk-Tailscaled、Termux 跑 tailscaled 相比有什么区别？</h3>
+          <p>Magisk-Tailscaled 需要 root，且上游仓库已于 2026 年 6 月归档；Termux 方案需要手动下载二进制、配置与保活，
+             SSH 客户端还得另外准备。SSHWithTailscale 免 root、开箱即用，并自带 SSH/SFTP 客户端、终端、端口转发与反向导出。</p>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pt-0">
+    <div class="container">
+      <div class="box">
+        <h2 class="title is-4">它是怎么工作的</h2>
+        <div class="content">
+          <p>SSHWithTailscale → SOCKS5 <code>127.0.0.1:1055</code> → 进程内 Tailscale netstack（userspace 模式）
+             → WireGuard 加密隧道 → <code>100.x.x.x</code> tailnet 内网设备。
+             <a href="index.html">返回介绍</a> · <a href="docs.html">查看使用说明</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <p class="has-text-weight-semibold">SSHWithTailscale</p>
+          <p class="is-size-7">内置 Tailscale 的 Android SSH 客户端 · 开源 (GPL-3.0-or-later)</p>
+        </div>
+        <div class="column has-text-right">
+          <p>
+            <a href="https://github.com/Matt-wzy/ssh-with-tailscale" target="_blank" rel="noopener">GitHub</a> ·
+            <a href="https://github.com/Matt-wzy/ssh-with-tailscale/releases" target="_blank" rel="noopener">下载</a> ·
+            <a href="docs.html">使用说明</a> ·
+            <a href="faq.html">常见问题</a>
+          </p>
+          <p class="is-size-7 mt-2">© 2026 Matt-wzy</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/theme.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var burger = document.querySelector('.navbar-burger');
+      if (burger) burger.addEventListener('click', function () {
+        var t = document.getElementById(burger.dataset.target);
+        burger.classList.toggle('is-active');
+        t.classList.toggle('is-active');
+      });
+    });
+  </script>
+</body>
+</html>
