@@ -1,0 +1,1 @@
+Android SSH client with Tailscale built in — no system app, no VPN

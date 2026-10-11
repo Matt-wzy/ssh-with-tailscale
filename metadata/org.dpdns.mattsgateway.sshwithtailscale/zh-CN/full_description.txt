@@ -1,0 +1,12 @@
+SSHWithTailscale 是一款开源的 Android SSH / SFTP 客户端，把 Tailscale 网络栈直接嵌入 App 内部。
+
+- 不需要系统版 Tailscale App、不占用 VPN 权限、无需 root
+- 通过进程内 netstack 直连 100.x 内网设备
+- 本地 SOCKS5 代理（127.0.0.1:1055）桥接 JSch 完成 SSH / SFTP
+- 终端支持 VT100/ANSI，长按选中复制
+- SFTP 文件管理：多选、并发传输、碎文件服务器端打包
+- 端口转发（本地 -L）与 tailnet 反向导出
+- Tailnet 设备列表与主机密钥 TOFU 校验
+- 前台保活，锁屏后连接不中断
+
+本应用需连接 Tailscale 协调服务器以加入你的 tailnet；该控制面为非自由服务，因此 F-Droid 标注 NonFreeNet。除此之外全部代码以 GPL-3.0 自由开源。

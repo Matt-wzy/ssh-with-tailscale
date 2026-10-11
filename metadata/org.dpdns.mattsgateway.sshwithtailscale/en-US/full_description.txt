@@ -1,0 +1,12 @@
+SSHWithTailscale is an open-source Android SSH and SFTP client with the Tailscale network stack embedded directly inside the app.
+
+- No system Tailscale app, no VPN profile, and no root required
+- Connects straight to 100.x devices over an in-process netstack
+- Local SOCKS5 proxy (127.0.0.1:1055) bridged to JSch for SSH/SFTP
+- Terminal with VT100/ANSI support and long-press copy
+- SFTP file manager: multi-select, parallel transfer, tar for small files
+- Port forwarding (local -L) and reverse export over the tailnet
+- Tailnet device list and host-key TOFU verification
+- Foreground keep-alive so connections survive on a locked phone
+
+The app contacts Tailscale's coordination server to join your tailnet; that control plane is a non-free service, so F-Droid flags NonFreeNet. Everything else is fully free and open source under GPL-3.0.
